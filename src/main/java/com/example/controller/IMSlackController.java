@@ -3,7 +3,7 @@ package com.example.controller;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.example.models.Message;
-import com.example.service.MessageSender;
+import com.example.service.MessageSenderSlack;
 import com.fasterxml.jackson.core.JsonProcessingException;
 
 import org.springframework.http.ResponseEntity;
@@ -14,16 +14,16 @@ import org.springframework.web.bind.annotation.RequestBody;
 @RestController
 public class IMSlackController {
 	
-	 private final MessageSender messageSender;
+	 private final MessageSenderSlack messageSenderSlack;
 
-    public IMSlackController(MessageSender messageSender) {
-         this.messageSender = messageSender; 
+    public IMSlackController(MessageSenderSlack messageSenderSlack) {
+         this.messageSenderSlack = messageSenderSlack; 
 	}
 
 	@PostMapping(path = "/messages")
 	public ResponseEntity<String> sendMessage(@PathVariable String userName, @RequestBody Message message) throws JsonProcessingException {
 		try {	
-            messageSender.sendMessage(userName, message);
+            messageSenderSlack.sendMessage(userName, message);
             return ResponseEntity.ok().build();
 		} catch (JsonProcessingException e) {
 			return ResponseEntity.badRequest().build();

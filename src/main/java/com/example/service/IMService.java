@@ -1,50 +1,49 @@
 package com.example.service;
 
+import java.util.concurrent.ExecutionException;
+
 import javax.servlet.http.HttpServletRequest;
-import javax.ws.rs.core.Response;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.RequestBody;
 
 import com.example.models.IncModel;
-import com.example.util.ApiResponseMessage;
+import com.example.notification.IMKafkaUtils;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 @Service
 public class IMService {
 	
-	private KafkaTemplate<String, String> template;
+	private IMKafkaUtils kafkaUtils;
+	private String consumerTopic = "IMTopic";
+	enum IMStatus
+	{
+	    NEW, INPROCESS, COMPLETED;
+	}
 	
-    public IMService(KafkaTemplate<String, String> template) {
-        this.template = template;
-        
+    public IMService(IMKafkaUtils utils) {
+        this.kafkaUtils = utils;
     }
 
-	public Response getIncidents() {
-		return Response.ok().entity(new ApiResponseMessage(ApiResponseMessage.OK, "magic!")).build();
-	}
-
-	public ResponseEntity<?> createIncident(@RequestBody(required = true) IncModel in, HttpServletRequest req) throws JsonProcessingException {
-		//send notification on the incident
-		in.setStatus("New");
-		ObjectMapper m = new ObjectMapper();
-		String mStr = m.writeValueAsString(in);
-		template.send("myTopic", mStr);
+	public ResponseEntity<?> createIncident(@RequestBody(required = true) IncModel in, HttpServletRequest req) throws JsonProcessingException, InterruptedException, ExecutionException {
+		if(!kafkaUtils.getTopicsList().contains(consumerTopic)) {
+			kafkaUtils.createTopics(consumerTopic);
+		}
+		in.setStatus(IMStatus.NEW.toString());
+		kafkaUtils.sendMessage(consumerTopic, getMessageString(in));
 		return new ResponseEntity<>(HttpStatus.CREATED);
 	}
 
 	public ResponseEntity<?> updateIncident(IncModel in, HttpServletRequest req) throws JsonProcessingException {
-		in.setStatus("Completed");
-		ObjectMapper m = new ObjectMapper();
-		String mStr = m.writeValueAsString(in);
-		template.send("myTopic", mStr);
+		in.setStatus(IMStatus.COMPLETED.toString());
+		kafkaUtils.sendMessage(consumerTopic, getMessageString(in));
 		return new ResponseEntity<>(HttpStatus.ACCEPTED);
 	}
 	
-	
-
+	private String getMessageString(IncModel in) throws JsonProcessingException {
+		return new ObjectMapper().writeValueAsString(in);
+	}
 }

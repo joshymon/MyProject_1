@@ -15,14 +15,13 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 @Service
-public class MessageSender {
+public class MessageSenderSlack {
     
     public void sendMessage(String userName, Message message) throws JsonProcessingException {
     	
-    	//Read from ENV
     	String HOOKS_URL = "https://hooks.slack.com/services/%s";
         Map<String, String> USER_TO_CHANNEL_WEBHOOK = new HashMap<>();
-        USER_TO_CHANNEL_WEBHOOK.put("IM", "TENPG8UUU/B02137SG62W/HJDUrF3wzimTbcLWWZGDo7iZ");
+        USER_TO_CHANNEL_WEBHOOK.put("IM", "TENPG8UUU/B0217FCM8KF/qlCLACBg3bUqC10YrPuyUSVT");
         
         String userChannelId = USER_TO_CHANNEL_WEBHOOK.get(userName);
         String userWebhookUrl = String.format(HOOKS_URL, userChannelId);

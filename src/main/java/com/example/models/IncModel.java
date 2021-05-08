@@ -7,7 +7,6 @@ public class IncModel {
 	@JsonProperty("TicketId")
 	int ticketId;
 	
-
 	@JsonProperty("Reporter")
 	String reporter;
 	

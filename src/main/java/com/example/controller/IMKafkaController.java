@@ -1,34 +1,33 @@
 package com.example.controller;
 
 import java.util.List;
+import java.util.concurrent.ExecutionException;
 
-import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.example.notification.IMTopicConsumer;
+import com.example.notification.IMKafkaUtils;
+import com.example.service.IMTopicConsumer;
 
 @RestController	
 public class IMKafkaController {
 
-	private KafkaTemplate<String, String> template;
 	private IMTopicConsumer imTopicConsumer;
+	private IMKafkaUtils kafkaUtil;
 	
-    public IMKafkaController(KafkaTemplate<String, String> template, IMTopicConsumer imTopicConsumer) {
-        this.template = template;
+    public IMKafkaController(IMTopicConsumer imTopicConsumer, IMKafkaUtils utils) {
         this.imTopicConsumer = imTopicConsumer;
-        
+        this.kafkaUtil = utils;
     }
-	    
-	@GetMapping("/kafka/produce")
-	public void produce(@RequestParam String message) {
-	    template.send("myTopic", message);
-	}
 	
 	 @GetMapping("/kafka/messages")
 	 public List<String> getMessages() {
         return imTopicConsumer.getMessages();
+	 }
+	 
+	 @GetMapping("/kafka/topics")
+	 public List<String> getTopics() throws InterruptedException, ExecutionException {
+        return kafkaUtil.getTopicsList();
 	 }
 }
 

@@ -1,14 +1,14 @@
 package com.example.controller;
 
+import java.util.concurrent.ExecutionException;
+
 import javax.servlet.http.HttpServletRequest;
-import javax.ws.rs.core.Response;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.example.models.IncModel;
@@ -20,14 +20,9 @@ public class IMController {
 	
 	@Autowired
 	private IMService imservice;
-
-	@RequestMapping("/GetIncidents")
-	public Response getIncident() {
-        return imservice.getIncidents();	
-    }
 	
 	@PostMapping(value = "/Incident")
-	public ResponseEntity<?> createIncident(@RequestBody(required = true) IncModel in, HttpServletRequest req) throws JsonProcessingException {
+	public ResponseEntity<?> createIncident(@RequestBody(required = true) IncModel in, HttpServletRequest req) throws JsonProcessingException, InterruptedException, ExecutionException {
         return imservice.createIncident(in, req);	
     }
 	
