@@ -1,5 +1,3 @@
-# MyProject_1
-
 # Getting Started
 
 ### Reference Documentation
