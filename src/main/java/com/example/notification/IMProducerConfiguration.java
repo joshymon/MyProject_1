@@ -29,6 +29,7 @@ public class IMProducerConfiguration {
 		configurations.put(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, KAFKA_BROKER);
 		configurations.put(ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG, StringSerializer.class);
 		configurations.put(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG, StringSerializer.class);
+		configurations.put(ProducerConfig.ENABLE_IDEMPOTENCE_CONFIG, true); //ensures exactly one copy of each message is written to broker and also in order
 		return configurations;
 	  }
 

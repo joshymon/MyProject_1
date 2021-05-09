@@ -1,4 +1,4 @@
-package com.example.service;
+package com.example.notification;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -7,16 +7,15 @@ import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.MediaType;
-import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
 import com.example.models.Message;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-@Service
-public class MessageSenderSlack {
+public class ConsumerChannelSlack implements ConsumerChannel{
     
+	@Override
     public void sendMessage(String userName, Message message) throws JsonProcessingException {
     	
     	String HOOKS_URL = "https://hooks.slack.com/services/%s";

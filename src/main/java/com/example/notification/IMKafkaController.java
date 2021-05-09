@@ -1,4 +1,4 @@
-package com.example.controller;
+package com.example.notification;
 
 import java.util.List;
 import java.util.concurrent.ExecutionException;
@@ -6,7 +6,6 @@ import java.util.concurrent.ExecutionException;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.example.notification.IMKafkaUtils;
 import com.example.service.IMTopicConsumer;
 
 @RestController	
